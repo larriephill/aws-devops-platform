@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  APP_ENV: "dev"
+  APP_VERSION: "0.1.0-k8s"
+  PORT: "8080"
