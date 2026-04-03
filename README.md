@@ -64,4 +64,37 @@ Before introducing Kubernetes or GitOps, the workload itself must be operational
 - Verified root, health, readiness, and metrics endpoints
 - Confirmed the project structure was ready for the next platform phases
 
+## Phase 2 - Kubernetes Deployment
+
+This phase focused on deploying the application to Kubernetes using declarative manifests and environment overlays.
+
+### Objective
+Run the application in a local Kubernetes cluster with production-minded workload definitions, stable service discovery, health probes, and resource controls.
+
+### What was built
+- A local Kubernetes cluster using kind
+- A dedicated namespace for the application
+- A ConfigMap for runtime configuration
+- A Deployment with two replicas
+- Liveness and readiness probes
+- CPU and memory requests/limits
+- A ClusterIP Service for internal access
+- A Kustomize base and dev overlay for declarative configuration management
+
+### Why this matters
+Kubernetes is not just about running containers. It is about declaring how workloads should run, recover, and be exposed. This phase introduced the core runtime objects that production teams rely on for scheduling, resiliency, and service discovery.
+
+### Production-minded decisions
+- Used a Deployment for controlled replica management
+- Added health probes so Kubernetes can detect unhealthy or unready Pods
+- Added resource requests and limits to support predictable scheduling and later cost analysis
+- Used a Service instead of direct Pod access to provide a stable endpoint
+- Structured manifests with Kustomize to prepare for GitOps in the next phase
+
+### Validation
+- Created a local kind cluster
+- Loaded the locally built container image into the cluster
+- Applied the manifests with Kustomize
+- Verified the rollout completed successfully
+- Confirmed the application responded through the Kubernetes Service via port-forwarding
 
