@@ -1,3 +1,7 @@
 fastapi
 uvicorn[standard]
 prometheus-client
+opentelemetry-api
+opentelemetry-sdk
+opentelemetry-exporter-otlp-proto-grpc
+opentelemetry-instrumentation-fastapi

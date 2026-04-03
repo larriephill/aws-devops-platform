@@ -5,14 +5,24 @@ import time
 from typing import Callable
 
 from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse
 from prometheus_client import Counter, Histogram, make_asgi_app
+
+from opentelemetry import trace
+from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
+from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
+from opentelemetry.sdk.resources import Resource
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
 
 
 APP_NAME = "production-ready-aws-platform"
 APP_ENV = os.getenv("APP_ENV", "dev")
 APP_VERSION = os.getenv("APP_VERSION", "0.1.0")
 PORT = int(os.getenv("PORT", "8080"))
+OTEL_EXPORTER_OTLP_ENDPOINT = os.getenv(
+    "OTEL_EXPORTER_OTLP_ENDPOINT",
+    "otel-collector.monitoring.svc.cluster.local:4317",
+)
 
 
 class JsonFormatter(logging.Formatter):
@@ -49,12 +59,31 @@ REQUEST_LATENCY = Histogram(
 )
 
 
+resource = Resource.create(
+    {
+        "service.name": APP_NAME,
+        "service.version": APP_VERSION,
+        "deployment.environment": APP_ENV,
+    }
+)
+
+tracer_provider = TracerProvider(resource=resource)
+span_exporter = OTLPSpanExporter(
+    endpoint=OTEL_EXPORTER_OTLP_ENDPOINT,
+    insecure=True,
+)
+tracer_provider.add_span_processor(BatchSpanProcessor(span_exporter))
+trace.set_tracer_provider(tracer_provider)
+
+
 app = FastAPI(
     title=APP_NAME,
     version=APP_VERSION,
     docs_url="/docs",
     redoc_url=None,
 )
+
+FastAPIInstrumentor.instrument_app(app)
 
 
 @app.middleware("http")

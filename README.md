@@ -98,3 +98,37 @@ Kubernetes is not just about running containers. It is about declaring how workl
 - Verified the rollout completed successfully
 - Confirmed the application responded through the Kubernetes Service via port-forwarding
 
+
+## Phase 3 - GitOps with Argo CD
+
+This phase introduced GitOps-based deployment management using Argo CD.
+
+### Objective
+Move from manual Kubernetes deployment to a Git-driven reconciliation model where the cluster continuously converges toward the desired state stored in Git.
+
+### What was built
+- Argo CD installed into the Kubernetes cluster
+- Local Argo CD UI and CLI access via port-forwarding
+- A declarative Argo CD `Application` manifest stored in the repository
+- Automated sync configuration for Git-driven deployment updates
+- Self-heal configuration to correct live drift from desired state
+
+### Why this matters
+GitOps improves deployment consistency by making Git the source of truth for cluster state. Instead of applying changes manually, engineers update version-controlled manifests and let Argo CD reconcile the cluster automatically.
+
+### Production-minded decisions
+- Defined the Argo CD application declaratively rather than relying only on UI clicks
+- Enabled automated sync so changes in Git trigger reconciliation
+- Enabled pruning to remove obsolete resources safely
+- Enabled self-heal so Argo CD can restore live state when manual drift is introduced
+- Kept the application source path aligned with the existing Kustomize overlay structure
+
+### Validation
+- Installed and accessed Argo CD locally
+- Logged into the UI and CLI successfully
+- Created an Argo CD application targeting the `k8s/overlays/dev` path
+- Verified the application reached a `Synced` and `Healthy` state
+- Demonstrated GitOps by changing the desired replica count in Git and observing the cluster reconcile
+- Demonstrated self-healing by manually scaling the deployment and confirming Argo CD restored the Git-defined state
+
+

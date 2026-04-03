@@ -9,4 +9,4 @@ resources:
 
 images:
   - name: production-ready-aws-platform
-    newTag: phase1
+    newTag: phase4

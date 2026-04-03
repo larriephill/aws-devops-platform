@@ -2,11 +2,14 @@ apiVersion: v1
 kind: Service
 metadata:
   name: app-service
+  labels:
+    app: production-ready-aws-platform
 spec:
   selector:
     app: production-ready-aws-platform
   ports:
-    - protocol: TCP
+    - name: http
+      protocol: TCP
       port: 80
       targetPort: 8080
   type: ClusterIP
