@@ -8,6 +8,10 @@ The platform solves a common problem: applications are often easy to run once, b
 
 The result is a system  that makes deployments safer, changes easier to manage, and the platform operations more reliable.
 
+## Architecture
+Git-driven platform architecture showing how Docker, Kubernetes, Kustomize, Argo CD, Prometheus, Grafana, OpenTelemetry, and CAST AI work together to deliver, observe, and optimise the application.
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/5ffa3986-55d2-470c-8075-52ba8397b8b7" />
+
 
 
 ## Platform Workflow
@@ -34,22 +38,33 @@ Docker creates a consistent container image, kubernetes runs and exposes it, Kus
 
 5. **Observability and efficiency**
    - Prometheus collects metrics, Grafana visualises runtime behaviour, and CAST AI adds cost and efficency visibility for resource usage.
-   - Outcome: the platform is easier to monitor, troubleshoot, and optimize for cost and reliability.
-
-
-## Architecture
-Git-driven platform architecture showing how Docker, Kubernetes, Kustomize, Argo CD, Prometheus, Grafana, OpenTelemetry, and CAST AI work together to deliver, observe, and optimise the application.
+   - Outcome: the platform is easier to monitor, troubleshoot, and optimize for cost and reliability
 
 ## Achieved outcomes
 
 - The containerised FastAPI application was built and verified through its core endpoints: /, /healthz, /readyz, and /metrics
+
+<img width="1883" height="630" alt="Screenshot 2026-04-03 100704" src="https://github.com/user-attachments/assets/8a2b432a-c711-4430-b094-1a67dce39135" />
+
 - The application was deployed successfully to Kubernetes with environment-based configuration and defined resource controls
+  
 - The deployment structure was organised with Kustomize so the same workload could be managed cleanly across environments
+  
+<img width="1717" height="465" alt="image" src="https://github.com/user-attachments/assets/e6740a9d-99d3-4d42-8423-92c9ec1ee1f9" />
+
 - GitOps was implemented with Argo CD, with automated sync and self-heal confirming that Git controlled the deployed state
+  
+<img width="1918" height="901" alt="Screenshot 2026-04-03 110716" src="https://github.com/user-attachments/assets/6a3be5a2-ba03-46f1-9e6a-f17bc36e53af" />
+
+<img width="1450" height="454" alt="Screenshot 2026-04-03 100157" src="https://github.com/user-attachments/assets/55d9f070-a9a8-4820-9fd3-e3f54920f81c" />
+
 - Application and platform behaviour were validated through Prometheus metrics and Grafana dashboards
+
+<img width="1913" height="987" alt="Screenshot 2026-04-04 123518" src="https://github.com/user-attachments/assets/5e4c57d5-54d9-4a63-86e4-9d6b5a8a2e9c" />
+
 - Cost visibility and workload efficiency were made visible through the CAST AI dashboard
-
-
+  
+<img width="1909" height="978" alt="Screenshot 2026-04-04 133730" src="https://github.com/user-attachments/assets/35500b20-59ae-44a4-895e-0de329929d75" />
 
 ## Repository areas
 
