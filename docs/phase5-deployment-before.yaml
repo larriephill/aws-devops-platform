@@ -1,0 +1,97 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    argocd.argoproj.io/tracking-id: platform-dev:apps/Deployment:devops-platform/app
+    deployment.kubernetes.io/revision: "3"
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{"argocd.argoproj.io/tracking-id":"platform-dev:apps/Deployment:devops-platform/app"},"name":"app","namespace":"devops-platform"},"spec":{"replicas":3,"selector":{"matchLabels":{"app":"production-ready-aws-platform"}},"template":{"metadata":{"labels":{"app":"production-ready-aws-platform"}},"spec":{"containers":[{"envFrom":[{"configMapRef":{"name":"app-config"}}],"image":"production-ready-aws-platform:phase4","imagePullPolicy":"IfNotPresent","livenessProbe":{"httpGet":{"path":"/healthz","port":8080},"initialDelaySeconds":10,"periodSeconds":10},"name":"app","ports":[{"containerPort":8080}],"readinessProbe":{"httpGet":{"path":"/readyz","port":8080},"initialDelaySeconds":5,"periodSeconds":5},"resources":{"limits":{"cpu":"150m","memory":"128Mi"},"requests":{"cpu":"50m","memory":"64Mi"}}}]}}}}
+  creationTimestamp: "2026-04-03T08:17:19Z"
+  generation: 11
+  name: app
+  namespace: devops-platform
+  resourceVersion: "23719"
+  uid: 91f9a210-bcd2-4fa7-81f6-96fe6a817d0f
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 3
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: production-ready-aws-platform
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/restartedAt: "2026-04-03T15:08:31+01:00"
+      labels:
+        app: production-ready-aws-platform
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: app-config
+        image: production-ready-aws-platform:phase4
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /healthz
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        name: app
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /readyz
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources:
+          limits:
+            cpu: 150m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 64Mi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+status:
+  availableReplicas: 3
+  conditions:
+  - lastTransitionTime: "2026-04-03T10:10:56Z"
+    lastUpdateTime: "2026-04-03T10:10:56Z"
+    message: Deployment has minimum availability.
+    reason: MinimumReplicasAvailable
+    status: "True"
+    type: Available
+  - lastTransitionTime: "2026-04-03T08:17:19Z"
+    lastUpdateTime: "2026-04-03T14:22:26Z"
+    message: ReplicaSet "app-5ccff58d6f" has successfully progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing
+  observedGeneration: 11
+  readyReplicas: 3
+  replicas: 3
+  terminatingReplicas: 0
+  updatedReplicas: 3

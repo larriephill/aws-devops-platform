@@ -1,134 +1,63 @@
-# Production-Ready AWS Platform
+# AWS DevOps Platform
 
-A production-style DevOps/SRE project demonstrating containerisation, Kubernetes deployment, GitOps delivery, observability, and cost optimisation.
+This is an automated deployment platform that uses Kubernetes as the runtime layer, Argo CD for GitOps-based deployment control, Prometheus and Grafana for metrics and visibility, OpenTelemetry for telemetry generation, and CAST AI for workload efficiency and cost monitoring.
 
-## Technology Stack
-- Python / FastAPI
-- Docker
-- Kubernetes
-- GitHub Actions
-- Argo CD
-- Prometheus
-- Grafana
-- OpenTelemetry
-- CAST AI
+This platform does more than ship a container to a Kubernetes cluster, rather it is designed for Git to control application deployment,  application health is measurable, behaviour is observable, and infrastructure usage can be reviewed on Cast AI's dashboard where cost is visible. The main deliverable is a reliable delivery of FastAPI app from code to runtime.
 
-## Repository Structure
-## Phase 1 - Foundation
-## Screenshots
+The platform solves a common problem: applications are often easy to run once, but much harder to deploy consistently, monitor properly, recover safely, and operate efficiently over time. I addressed that by building a delivery platform that packages the app with Docker, deploys it to Kubernetes with health checks, service discovery, and environment-based configuration, then using Argo CD to continuously reconcile the cluster to the desired state stored in Git. Prometheus and Grafana provide runtime visibility, OpenTelemetry strengthens the observability model, and CAST AI adds efficiency and cost insight so operational decisions are based on evidence.
 
-### Application endpoints
-- `/` returns service metadata and runtime status
-- `/healthz` provides a basic liveness-style health response
-- `/readyz` provides a readiness-style response
-- `/metrics` exposes Prometheus-compatible metrics
+The result is a system  that makes deployments safer, changes easier to manage, and the platform operations more reliable.
 
 
 
-### Container build
-The application was packaged into a Docker image to provide a consistent runtime across local development, CI, and later Kubernetes deployment.
-
-## Phase 1 - Foundation
-
-This phase focused on building the application and container foundation for the platform.
-
-### Objective
-Create a small production-minded service that can be packaged consistently, configured through environment variables, and extended later for Kubernetes, GitOps, observability, and cost optimisation.
-
-### What was built
-- A small HTTP application for platform testing
-- Health and readiness endpoints
-- A Prometheus-compatible metrics endpoint
-- Environment-based configuration
-- Structured application logging
-- A Docker image for repeatable local execution
-
-### Why this matters
-Before introducing Kubernetes or GitOps, the workload itself must be operationally sound. This means predictable startup behaviour, externalised configuration, health visibility, and basic telemetry support.
-
-### Application endpoints
-- `/` returns service metadata and runtime status
-- `/healthz` provides a liveness-style health response
-- `/readyz` provides a readiness-style response
-- `/metrics` exposes Prometheus-compatible metrics
-
-### Production-minded decisions
-- Kept the service intentionally small to focus on platform engineering concerns
-- Designed the app to expose health and metrics from the start
-- Structured the repo for future Kubernetes, GitOps, and observability phases
-- Packaged the application as a container to ensure environment consistency
-
-### Validation
-- Built the container image locally
-- Ran the service in Docker
-- Verified root, health, readiness, and metrics endpoints
-- Confirmed the project structure was ready for the next platform phases
-
-## Phase 2 - Kubernetes Deployment
-
-This phase focused on deploying the application to Kubernetes using declarative manifests and environment overlays.
-
-### Objective
-Run the application in a local Kubernetes cluster with production-minded workload definitions, stable service discovery, health probes, and resource controls.
-
-### What was built
-- A local Kubernetes cluster using kind
-- A dedicated namespace for the application
-- A ConfigMap for runtime configuration
-- A Deployment with two replicas
-- Liveness and readiness probes
-- CPU and memory requests/limits
-- A ClusterIP Service for internal access
-- A Kustomize base and dev overlay for declarative configuration management
-
-### Why this matters
-Kubernetes is not just about running containers. It is about declaring how workloads should run, recover, and be exposed. This phase introduced the core runtime objects that production teams rely on for scheduling, resiliency, and service discovery.
-
-### Production-minded decisions
-- Used a Deployment for controlled replica management
-- Added health probes so Kubernetes can detect unhealthy or unready Pods
-- Added resource requests and limits to support predictable scheduling and later cost analysis
-- Used a Service instead of direct Pod access to provide a stable endpoint
-- Structured manifests with Kustomize to prepare for GitOps in the next phase
-
-### Validation
-- Created a local kind cluster
-- Loaded the locally built container image into the cluster
-- Applied the manifests with Kustomize
-- Verified the rollout completed successfully
-- Confirmed the application responded through the Kubernetes Service via port-forwarding
+## Platform Workflow
+The platform consists of 5 connected layers that move the application from a packaged artifact to managed, observable and cost-aware runtime.
+Docker creates a consistent container image, kubernetes runs and exposes it, Kustomize structures it for different environments, Argo CD keeps the cluster aligned with Git, and Prometheus, Grafana, and CAST AI provides visibility for monitoring behavior and efficiency
 
 
-## Phase 3 - GitOps with Argo CD
 
-This phase introduced GitOps-based deployment management using Argo CD.
+1. **Application and Container runtime**
+   - Docker packages the FASTAPI app with health, readiness and metrics endpoints, into a consistent runtime artifact.
+   - Outcome: the same workload can run locally, in CI, and in Kubernetes without drift.
 
-### Objective
-Move from manual Kubernetes deployment to a Git-driven reconciliation model where the cluster continuously converges toward the desired state stored in Git.
+2. **Kubernetes application layer**
+   - Deployments, Services, ConfigMaps, probes, and resource settings define how the workload runs.
+   - Outcome: the app can start predictably, recover from failure, and expose stable service access.
 
-### What was built
-- Argo CD installed into the Kubernetes cluster
-- Local Argo CD UI and CLI access via port-forwarding
-- A declarative Argo CD `Application` manifest stored in the repository
-- Automated sync configuration for Git-driven deployment updates
-- Self-heal configuration to correct live drift from desired state
+3. **Environment structure**
+   - Kustomize base and overlays separate shared app configuration from environment-specific settings.
+   - Outcome: the same application can be deployed to different environments in a controlled and repeatable way.
 
-### Why this matters
-GitOps improves deployment consistency by making Git the source of truth for cluster state. Instead of applying changes manually, engineers update version-controlled manifests and let Argo CD reconcile the cluster automatically.
+4. **GitOps control plane**
+   - Argo CD watches the Git repository and reconciles the cluster to the desired state.
+   - Outcome: deployments become version-controlled, repeatable, and resistant to manual drift.
 
-### Production-minded decisions
-- Defined the Argo CD application declaratively rather than relying only on UI clicks
-- Enabled automated sync so changes in Git trigger reconciliation
-- Enabled pruning to remove obsolete resources safely
-- Enabled self-heal so Argo CD can restore live state when manual drift is introduced
-- Kept the application source path aligned with the existing Kustomize overlay structure
+5. **Observability and efficiency**
+   - Prometheus collects metrics, Grafana visualises runtime behaviour, and CAST AI adds cost and efficency visibility for resource usage.
+   - Outcome: the platform is easier to monitor, troubleshoot, and optimize for cost and reliability.
 
-### Validation
-- Installed and accessed Argo CD locally
-- Logged into the UI and CLI successfully
-- Created an Argo CD application targeting the `k8s/overlays/dev` path
-- Verified the application reached a `Synced` and `Healthy` state
-- Demonstrated GitOps by changing the desired replica count in Git and observing the cluster reconcile
-- Demonstrated self-healing by manually scaling the deployment and confirming Argo CD restored the Git-defined state
 
+## Architecture
+Git-driven platform architecture showing how Docker, Kubernetes, Kustomize, Argo CD, Prometheus, Grafana, OpenTelemetry, and CAST AI work together to deliver, observe, and optimise the application.
+
+## Achieved outcomes
+
+- The containerised FastAPI application was built and verified through its core endpoints: /, /healthz, /readyz, and /metrics
+- The application was deployed successfully to Kubernetes with environment-based configuration and defined resource controls
+- The deployment structure was organised with Kustomize so the same workload could be managed cleanly across environments
+- GitOps was implemented with Argo CD, with automated sync and self-heal confirming that Git controlled the deployed state
+- Application and platform behaviour were validated through Prometheus metrics and Grafana dashboards
+- Cost visibility and workload efficiency were made visible through the CAST AI dashboard
+
+
+
+## Repository areas
+
+- `app/` - application code and instrumentation
+- `k8s/base/` - shared Kubernetes runtime definition
+- `k8s/overlays/dev/` - environment-specific deployment settings
+- `argocd/apps/` - GitOps application definition
+
+## Conclusion
+This project brings delivery control, runtime reliability, observability, and cost awareness into one platform workflow. Instead of treating deployment, monitoring, and efficiency as separate tasks, it connects them into a system that is easier to operate, easier to trust, and easier to evolve.
 
