@@ -1,10 +1,12 @@
 # AWS DevOps Platform
 
-This is an automated deployment platform that uses Kubernetes as the runtime layer, Argo CD for GitOps-based deployment control, Prometheus and Grafana for metrics and visibility, OpenTelemetry for telemetry generation, and CAST AI for workload efficiency and cost monitoring.
+This project is a production-style DevOps / SRE platform built around a small FastAPI application running on Kubernetes. The goal was not just to deploy an app, but to solve the operational problems that appear after deployment: manual infrastructure changes, configuration drift, poor visibility, difficult rollback paths, and weak cost awareness.
 
-This platform does more than ship a container to a Kubernetes cluster, rather it is designed for Git to control application deployment,  application health is measurable, behaviour is observable, and infrastructure usage can be reviewed on Cast AI's dashboard where cost is visible. The main deliverable is a reliable delivery of FastAPI app from code to runtime.
+The FastAPI service was designed to be operationally ready from the start. It exposes application, health, readiness, and metrics endpoints so the workload can be monitored, probed, and managed properly in Kubernetes. Docker packages the app into a consistent runtime artifact, while Kubernetes provides the runtime layer through Deployments, Services, probes, and resource controls.
 
-The platform solves a common problem: applications are often easy to run once, but much harder to deploy consistently, monitor properly, recover safely, and operate efficiently over time. I addressed that by building a delivery platform that packages the app with Docker, deploys it to Kubernetes with health checks, service discovery, and environment-based configuration, then using Argo CD to continuously reconcile the cluster to the desired state stored in Git. Prometheus and Grafana provide runtime visibility, OpenTelemetry strengthens the observability model, and CAST AI adds efficiency and cost insight so operational decisions are based on evidence.
+Argo CD sits at the center of the deployment model. Instead of treating deployment as a one-time pipeline action, Argo CD continuously reconciles the cluster against the desired state stored in Git. This prevents manual drift from becoming permanent, makes rollback easier because the trusted version lives in Git, and improves auditability because changes can be traced through commits rather than relying on ad-hoc edits in the cluster. In practical terms, Git becomes the source of truth and the cluster is kept aligned with it over time.
+
+The monitoring stack adds the evidence needed to operate the platform properly. Prometheus collects application metrics, Grafana visualises runtime behaviour, OpenTelemetry adds telemetry generation and trace collection, and CAST AI provides workload efficiency and cost visibility. Together, these tools make it easier to troubleshoot issues, validate behaviour after changes, and make resource decisions based on real data rather than assumptions.
 
 The result is a system  that makes deployments safer, changes easier to manage, and the platform operations more reliable.
 
@@ -73,6 +75,9 @@ Docker creates a consistent container image, kubernetes runs and exposes it, Kus
 - `k8s/overlays/dev/` - environment-specific deployment settings
 - `argocd/apps/` - GitOps application definition
 
-## Conclusion
-This project brings delivery control, runtime reliability, observability, and cost awareness into one platform workflow. Instead of treating deployment, monitoring, and efficiency as separate tasks, it connects them into a system that is easier to operate, easier to trust, and easier to evolve.
 
+## Conclusion
+
+This project brings together deployment control, runtime reliability, observability, and cost awareness into one platform workflow. FastAPI provides an application that is operationally ready for Kubernetes, while Argo CD changes the CD model from a one-time deployment into continuous reconciliation from Git. That means manual drift is easier to prevent, rollback is clearer, and the deployed state is easier to trust.
+
+On top of that, the monitoring and optimisation stack provides the visibility needed to operate the platform well. Prometheus and Grafana make application behaviour measurable, OpenTelemetry strengthens the observability model, and CAST AI adds efficiency and cost insight. The result is a platform that is easier to troubleshoot, easier to audit, and easier to operate safely over time.
